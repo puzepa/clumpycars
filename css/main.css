@@ -1,0 +1,17 @@
+.carContainer {
+    background: #663344;
+    position: absolute;
+    width: 100px;
+    height: 50px;
+	/*transition: all 0.03s linear;*/
+}
+
+.inputSubmit {
+    width: 200px;
+    height: 50px;
+    background: #5ca247;
+    color: #eee;
+}
+body {
+    background: #656685 url(../img/city.jpg) no-repeat center top;
+}
