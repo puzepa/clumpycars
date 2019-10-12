@@ -1,3 +1,8 @@
+Box2D().then(main);
+function main (Box2D){
+console.log ('Box2d loaded');
+}
+
 document.addEventListener('DOMContentLoaded',function(){
 
     var OnSocket = function (msg){
