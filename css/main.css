@@ -13,5 +13,7 @@
     color: #eee;
 }
 body {
+    margin:0;
+    padding:0;
     /*background: #656685 url(../img/city.jpg) no-repeat center top;*/
 }
