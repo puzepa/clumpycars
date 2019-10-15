@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded',function(){
         plane.position.y = 0;
         plane.position.z = 0;
 
+        var cube1g = new THREE.CubeGeometry(6,6,6);
+        var cube1m = new THREE.MeshLambertMaterial (
+            {color: 0xe05421});
+        this.obstacle = new THREE.Mesh(cube1g,cube1m);
+
         var cubeGeometry = new THREE.CubeGeometry(4,2,1);
         var cubeMaterial = new THREE.MeshLambertMaterial (
             {color: 0xff0000});
@@ -31,6 +36,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
         this.scene.add(this.cube);
         this.scene.add(plane);
+        this.scene.add(this.obstacle);
         this.scene.add(axes);
 
         this.camera.position.x = 0;
@@ -73,8 +79,16 @@ document.addEventListener('DOMContentLoaded',function(){
         this.renderScene = function (){
 
             function makeCloseToZero (value,threshold){
-                if (value > 0) return value - threshold;
-                if (value < 0) return value + threshold;
+
+                if (value > 0) {
+                     value = value - threshold;
+                    if (value < threshold) value = 0;
+                }
+
+                if (value < 0) {
+                    value = value + threshold;
+                    if (value > threshold) value = 0;
+                }
                 return value;
             }
 
@@ -100,11 +114,14 @@ document.addEventListener('DOMContentLoaded',function(){
             playerCarData.setAngle(self.angle);
 
             if (playerCarData.getOnAccelerate()) {
-                self.accelerationAddition = self.accelerationAddition + 0.001;
+                self.accelerationAddition = self.accelerationAddition + 0.01;
             }
             if (playerCarData.getOnBreak()) {
-                self.accelerationAddition = self.accelerationAddition - 0.001;
+                self.accelerationAddition = self.accelerationAddition - 0.01;
             }
+
+            self.accelerationAddition = makeCloseToZero(self.accelerationAddition,0.003);
+            if (self.accelerationAddition > 1) self.accelerationAddition = 1;
 
             playerCarData.setAcceleration(self.accelerationAddition);
             playerCarData.setX (playerCarData.getX() + playerCarData.getAcceleration() * Math.cos(playerCarData.getAngle()));
@@ -115,6 +132,11 @@ document.addEventListener('DOMContentLoaded',function(){
             self.render.cube.position.x = playerCarData.getX();
             self.render.cube.position.y = playerCarData.getY();
             self.render.cube.rotation.z = (self.angle);
+
+            self.camera.position.x = playerCarData.getX()+7;
+            self.camera.position.y = playerCarData.getY()+7;
+
+            //self.camera.lookAt (playerCarData.getX, playerCarData.getY(), 0);
             requestAnimationFrame(self.renderScene);
             self.renderer.render(self.scene,self.camera);
         };
